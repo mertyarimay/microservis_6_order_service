@@ -1,4 +1,4 @@
-package com.mertyarimay.order_service.Mapper;
+package com.mertyarimay.order_service.mapper;
 
 import org.modelmapper.ModelMapper;
 
