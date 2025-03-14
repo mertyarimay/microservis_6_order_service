@@ -1,4 +1,4 @@
-package com.mertyarimay.order_service.business.dto;
+package com.mertyarimay.order_service.business.dto.orderItem;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

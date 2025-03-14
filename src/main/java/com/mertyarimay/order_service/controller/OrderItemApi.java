@@ -1,14 +1,12 @@
 package com.mertyarimay.order_service.controller;
 
-import com.mertyarimay.order_service.business.dto.CreateOrderItemDto;
+import com.mertyarimay.order_service.business.dto.orderItem.CreateOrderItemDto;
+import com.mertyarimay.order_service.business.dto.orderItem.UpdateOrderItemDto;
 import com.mertyarimay.order_service.business.services.service.OrderItemService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
@@ -21,7 +19,28 @@ public class OrderItemApi {
         if(createOrderItem!=null){
             return  ResponseEntity.ok("Ürününüz sepete eklenmiştir Teslimat adresi ekleme kısmına geçebilirsiniz");
         }else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Ürün sepete eklenme işlemi başarısız Sipariş oluşturunuz Lütfen");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Ürün sepete eklenme işlemi başarısız Sipariş kaydı oluşturunuz Lütfen");
         }
     }
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Object>update(@RequestBody UpdateOrderItemDto updateOrderItemDto,@PathVariable("id")int id){
+        UpdateOrderItemDto updateOrderItem=orderItemService.update(updateOrderItemDto,id);
+        if(updateOrderItem!=null){
+            return ResponseEntity.ok("Sepetteki ürünün güncellemesi başarılı bir şekilde gerçekleşti ");
+        }else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Sepetteki ürün güncelleme işlemi başarısız");
+        }
+
+    }
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Object>delete(@PathVariable("id")int id){
+        boolean delete= orderItemService.delete(id);
+        if(delete==true){
+            return ResponseEntity.ok("Ürünü sepetten silme işlemi başarılı ");
+        }else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Silmek isteğiniz ürün sepetinizde bulunamadı Silme işlemi BAŞARISIZ...");
+        }
+    }
+
+
 }

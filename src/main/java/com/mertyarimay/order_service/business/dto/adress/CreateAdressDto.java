@@ -1,4 +1,4 @@
-package com.mertyarimay.order_service.business.dto;
+package com.mertyarimay.order_service.business.dto.adress;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

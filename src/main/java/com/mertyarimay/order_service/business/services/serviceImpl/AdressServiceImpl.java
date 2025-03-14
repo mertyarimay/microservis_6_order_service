@@ -1,6 +1,6 @@
 package com.mertyarimay.order_service.business.services.serviceImpl;
 
-import com.mertyarimay.order_service.business.dto.CreateAdressDto;
+import com.mertyarimay.order_service.business.dto.adress.CreateAdressDto;
 import com.mertyarimay.order_service.business.services.service.AdressService;
 import com.mertyarimay.order_service.data.entity.AdressEntity;
 import com.mertyarimay.order_service.data.repository.AdressRepository;

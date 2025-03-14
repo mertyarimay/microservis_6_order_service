@@ -1,7 +1,8 @@
 package com.mertyarimay.order_service.business.services.serviceImpl;
 
-import com.mertyarimay.order_service.business.dto.CreateOrderItemDto;
+import com.mertyarimay.order_service.business.dto.orderItem.CreateOrderItemDto;
 import com.mertyarimay.order_service.business.dto.ProductDto;
+import com.mertyarimay.order_service.business.dto.orderItem.UpdateOrderItemDto;
 import com.mertyarimay.order_service.business.services.service.OrderItemService;
 import com.mertyarimay.order_service.clıent.ProductClient;
 import com.mertyarimay.order_service.data.entity.OrderEntity;
@@ -29,13 +30,13 @@ public class OrderItemServiceImpl implements OrderItemService {
         ProductDto product=productClient.getProductById(createOrderItemDto.getProductId());
         OrderEntity orderEntity=orderRepository.findById(createOrderItemDto.getOrderId()).orElse(null);
         if(orderEntity!=null){
-            createOrderItemDto.setOrderId(orderEntity.getId());
-            createOrderItemDto.setProductId(product.getId());
-            createOrderItemDto.setProductName(product.getProductName());
-            BigDecimal price=new BigDecimal(product.getProductPrice());
-            createOrderItemDto.setProductPrice(price);
-            OrderItemEntity orderItemEntity=modelMapperService.forRequest().map(createOrderItemDto,OrderItemEntity.class);
+            OrderItemEntity orderItemEntity=new OrderItemEntity();
+            orderItemEntity.setProductId(product.getId());
+            orderItemEntity.setProductName(product.getProductName());
             orderItemEntity.setOrderEntity(orderEntity);
+            BigDecimal price=new BigDecimal(product.getProductPrice());
+            orderItemEntity.setPrice(price);
+            orderItemEntity.setQuantity(createOrderItemDto.getQuantity());
             orderItemRepository.save(orderItemEntity);
             orderRepository.updateStatus("Active",orderItemEntity.getOrderEntity().getId());
             CreateOrderItemDto createOrderItem=modelMapperService.forRequest().map(orderItemEntity, CreateOrderItemDto.class);
@@ -47,4 +48,36 @@ public class OrderItemServiceImpl implements OrderItemService {
 
 
     }
+
+    @Override
+    public UpdateOrderItemDto update(UpdateOrderItemDto updateOrderItemDto, int id) {
+        OrderItemEntity orderItemEntity=orderItemRepository.findById(id).orElse(null);
+        if(orderItemEntity!=null){
+            ProductDto productDto=productClient.getProductById(updateOrderItemDto.getProductId());
+            orderItemEntity.setProductId(productDto.getId());
+            orderItemEntity.setProductName(productDto.getProductName());
+            BigDecimal price=new BigDecimal(productDto.getProductPrice());
+            orderItemEntity.setPrice(price);
+            orderItemEntity.setQuantity(updateOrderItemDto.getQuantity());
+
+            orderItemRepository.save(orderItemEntity);
+            UpdateOrderItemDto updateOrderItem=modelMapperService.forRequest().map(orderItemEntity, UpdateOrderItemDto.class);
+            return updateOrderItem;
+        }
+        return null;
+
+    }
+
+    @Override
+    public boolean delete(int id) {
+        OrderItemEntity orderItemEntity=orderItemRepository.findById(id).orElse(null);
+        if(orderItemEntity!=null){
+            orderItemRepository.deleteById(id);
+            return true;
+        }else {
+            return false;
+        }
+
+    }
+
 }

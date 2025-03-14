@@ -20,6 +20,10 @@ public class OrderEntity {
      @GeneratedValue(strategy = GenerationType.IDENTITY)
      private int id;
      private int customerId;
+     private String customerName;
+     private String customerLastName;
+     private String customerPhoneNumber;
+     private String customerEmail;
      private BigDecimal totalAmount = BigDecimal.ZERO;
      private LocalDateTime orderDate;
      private LocalDateTime deliveryDate;
@@ -47,12 +51,22 @@ public class OrderEntity {
      public void prePersist() {
           this.orderDate = LocalDateTime.now();
           this.deliveryDate = LocalDateTime.now().plusDays(3);
+
     }
 
       @PreUpdate
      public void preUpdate(){
+
           recalculateTotalAmount();
-          this.orderDate = LocalDateTime.now();
-          this.deliveryDate = LocalDateTime.now().plusDays(3);
+
+
+          if (this.orderDate == null) {
+              this.orderDate = LocalDateTime.now();
+          }
+
+
+          if (this.deliveryDate == null) {
+              this.deliveryDate = LocalDateTime.now().plusDays(3);
+          }
     }
 }

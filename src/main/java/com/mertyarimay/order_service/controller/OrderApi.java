@@ -1,8 +1,8 @@
 package com.mertyarimay.order_service.controller;
 
-import com.mertyarimay.order_service.business.dto.CreateOrderDto;
+import com.mertyarimay.order_service.business.dto.order.CreateOrderDto;
 import com.mertyarimay.order_service.business.dto.ApprovalResponseDto;
-import com.mertyarimay.order_service.business.dto.UpdateOrderDto;
+import com.mertyarimay.order_service.business.dto.order.UpdateOrderDto;
 import com.mertyarimay.order_service.business.services.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -17,8 +17,8 @@ public class OrderApi {
     private final OrderService orderService;
 
     @PostMapping("/create")
-    public ResponseEntity<Object>create(@RequestBody CreateOrderDto createOrderDto){
-        CreateOrderDto createOrder=orderService.createOrder(createOrderDto);
+    public ResponseEntity<Object>create(@RequestBody CreateOrderDto createOrderDto ,@RequestHeader("Authorization") String token){
+        CreateOrderDto createOrder=orderService.createOrder(createOrderDto,token);
         if(createOrder!=null){
             return ResponseEntity.ok("Ürün eklemek İçin Sipariş Kaydınız Oluşturuldu Ürünlerinizi Ekleyebilirsiniz");
 
@@ -36,6 +36,7 @@ public class OrderApi {
         }
 
     }
+
 
 
 }

@@ -1,15 +1,15 @@
 package com.mertyarimay.order_service.business.services.serviceImpl;
 
-import com.mertyarimay.order_service.business.dto.CreateOrderDto;
+import com.mertyarimay.order_service.business.dto.*;
 
-import com.mertyarimay.order_service.business.dto.ApprovalResponseDto;
-import com.mertyarimay.order_service.business.dto.OrderInProductDto;
-import com.mertyarimay.order_service.business.dto.UpdateOrderDto;
+import com.mertyarimay.order_service.business.dto.order.CreateOrderDto;
+import com.mertyarimay.order_service.business.dto.order.UpdateOrderDto;
+import com.mertyarimay.order_service.business.dto.orderItem.OrderInProductDto;
 import com.mertyarimay.order_service.business.services.service.OrderService;
+import com.mertyarimay.order_service.clıent.CustomerClient;
 import com.mertyarimay.order_service.clıent.ProductClient;
 import com.mertyarimay.order_service.data.entity.AdressEntity;
 import com.mertyarimay.order_service.data.entity.OrderEntity;
-import com.mertyarimay.order_service.data.entity.OrderItemEntity;
 import com.mertyarimay.order_service.data.repository.AdressRepository;
 import com.mertyarimay.order_service.data.repository.OrderItemRepository;
 import com.mertyarimay.order_service.data.repository.OrderRepository;
@@ -18,7 +18,6 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,19 +30,26 @@ public class OrderServiceImpl implements OrderService {
     private final ModelMapperService modelMapperService;
     private final AdressRepository adressRepository;
     private final ProductClient productClient;
+    private final CustomerClient customerClient;
 
 
     @Transactional
     @Override
-    public CreateOrderDto createOrder(CreateOrderDto createOrderDto) {
+    public CreateOrderDto createOrder(CreateOrderDto createOrderDto, String token) {
         OrderEntity order=new OrderEntity();
-        order.setCustomerId(createOrderDto.getCustomerId());
+        CustomerDto customerDto=customerClient.getCustomerId(createOrderDto.getCustomerId(),token);
+        order.setCustomerId(customerDto.getId());
+        order.setCustomerName(customerDto.getName());
+        order.setCustomerLastName(customerDto.getLastName());
+        order.setCustomerPhoneNumber(customerDto.getPhoneNumber());
+        order.setCustomerEmail(customerDto.getEmail());
         orderRepository.save(order);
-
         CreateOrderDto createOrder=modelMapperService.forRequest().map(order,CreateOrderDto.class);
         return createOrder;
     }
 
+
+    @Transactional
     @Override
     public ApprovalResponseDto updateOrder(UpdateOrderDto updateOrderDto, int id) {
         OrderEntity order=orderRepository.findById(id).orElse(null);
@@ -51,6 +57,7 @@ public class OrderServiceImpl implements OrderService {
             AdressEntity adressEntity=adressRepository.findById(updateOrderDto.getAdressId()).orElse(null);
             if(adressEntity!=null){
                 order.setAdressEntity(adressEntity);
+                order.recalculateTotalAmount();
                 orderRepository.save(order);
                 ApprovalResponseDto approvalResponse=new ApprovalResponseDto();
                List<Object>products= order.getOrderItemEntities().stream().map(orderItemEntity -> {

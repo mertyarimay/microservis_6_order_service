@@ -1,6 +1,6 @@
 package com.mertyarimay.order_service.controller;
 
-import com.mertyarimay.order_service.business.dto.CreateAdressDto;
+import com.mertyarimay.order_service.business.dto.adress.CreateAdressDto;
 import com.mertyarimay.order_service.business.services.service.AdressService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;

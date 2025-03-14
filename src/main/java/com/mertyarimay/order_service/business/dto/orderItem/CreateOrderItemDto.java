@@ -1,4 +1,4 @@
-package com.mertyarimay.order_service.business.dto;
+package com.mertyarimay.order_service.business.dto.orderItem;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,8 +13,6 @@ public class CreateOrderItemDto {
     private int id;
     private int orderId;
     private  int productId;
-    private String productName;
-    private BigDecimal productPrice;
     private int quantity;
 
 }
