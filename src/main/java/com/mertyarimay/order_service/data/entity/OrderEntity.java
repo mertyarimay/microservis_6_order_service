@@ -60,13 +60,13 @@ public class OrderEntity {
           recalculateTotalAmount();
 
 
-          if (this.orderDate == null) {
+          //if (this.orderDate == null) {
               this.orderDate = LocalDateTime.now();
-          }
+        //  }
 
 
-          if (this.deliveryDate == null) {
+        //  if (this.deliveryDate == null) {
               this.deliveryDate = LocalDateTime.now().plusDays(3);
-          }
+        //  }
     }
 }

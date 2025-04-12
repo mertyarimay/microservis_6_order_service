@@ -1,6 +1,7 @@
 package com.mertyarimay.order_service.controller;
 
 import com.mertyarimay.order_service.business.dto.orderItem.CreateOrderItemDto;
+import com.mertyarimay.order_service.business.dto.orderItem.GetByIdOrderItemDto;
 import com.mertyarimay.order_service.business.dto.orderItem.UpdateOrderItemDto;
 import com.mertyarimay.order_service.business.services.service.OrderItemService;
 import lombok.AllArgsConstructor;
@@ -22,6 +23,20 @@ public class OrderItemApi {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Ürün sepete eklenme işlemi başarısız Sipariş kaydı oluşturunuz Lütfen");
         }
     }
+    @GetMapping("/getById/{id}")
+    public ResponseEntity<Object>getById(@PathVariable("id")int id){
+        GetByIdOrderItemDto getByIdOrderItemDto=orderItemService.getById(id);
+        if(getByIdOrderItemDto!=null){
+            return ResponseEntity.ok(getByIdOrderItemDto);
+        }else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Girdiğiniz Id Bulunamadı");
+        }
+    }
+
+
+
+
+
     @PutMapping("/update/{id}")
     public ResponseEntity<Object>update(@RequestBody UpdateOrderItemDto updateOrderItemDto,@PathVariable("id")int id){
         UpdateOrderItemDto updateOrderItem=orderItemService.update(updateOrderItemDto,id);

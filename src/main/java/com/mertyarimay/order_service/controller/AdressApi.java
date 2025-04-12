@@ -1,15 +1,14 @@
 package com.mertyarimay.order_service.controller;
 
 import com.mertyarimay.order_service.business.dto.adress.CreateAdressDto;
+import com.mertyarimay.order_service.business.dto.adress.GetByIdAdressDto;
+import com.mertyarimay.order_service.business.dto.adress.UpdateAdressDto;
 import com.mertyarimay.order_service.business.services.service.AdressService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
@@ -25,4 +24,38 @@ public class AdressApi {
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Adres Kayıt İşlemi Başarısız");
     }
+
+    @GetMapping("/getById/{id}")
+    public ResponseEntity<Object>getByID(@PathVariable("id")int id){
+        GetByIdAdressDto getByIdAdressDto=adressService.getById(id);
+        if(getByIdAdressDto!=null){
+            return ResponseEntity.ok(getByIdAdressDto);
+        }else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Girdiğiniz Id Bulunamadı");
+        }
+    }
+
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Object>update(@RequestBody @Valid UpdateAdressDto updateAdressDto,@PathVariable("id")int id){
+        UpdateAdressDto updateAdress=adressService.update(updateAdressDto,id);
+        if(updateAdress!=null){
+            return ResponseEntity.ok("Adres Güncelleme İşleminiz Başarılı");
+        }else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Güncellemek istediğiniz adress bulunamadı");
+        }
+    }
+
+
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Object>delete(@PathVariable("id") int id)  {
+        boolean delete=adressService.delete(id);
+        if(delete==true){
+            return ResponseEntity.ok("Adress Kaydı silinmiştir");
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Adres Kaydı bulunamadı Silme İşlemi Başarısız");
+
+    }
+
 }
