@@ -7,6 +7,7 @@ import com.mertyarimay.order_service.business.services.service.OrderItemService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,6 +15,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("order/item/api")
 public class OrderItemApi {
     private final OrderItemService orderItemService;
+
+
+
     @PostMapping("/create")
     public ResponseEntity<Object>create(@RequestBody CreateOrderItemDto createOrderItemDto){
         CreateOrderItemDto createOrderItem=orderItemService.create(createOrderItemDto);
@@ -23,6 +27,7 @@ public class OrderItemApi {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Ürün sepete eklenme işlemi başarısız Sipariş kaydı oluşturunuz Lütfen");
         }
     }
+    @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
     @GetMapping("/getById/{id}")
     public ResponseEntity<Object>getById(@PathVariable("id")int id){
         GetByIdOrderItemDto getByIdOrderItemDto=orderItemService.getById(id);
@@ -36,7 +41,7 @@ public class OrderItemApi {
 
 
 
-
+    @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
     @PutMapping("/update/{id}")
     public ResponseEntity<Object>update(@RequestBody UpdateOrderItemDto updateOrderItemDto,@PathVariable("id")int id){
         UpdateOrderItemDto updateOrderItem=orderItemService.update(updateOrderItemDto,id);
@@ -47,6 +52,7 @@ public class OrderItemApi {
         }
 
     }
+    @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Object>delete(@PathVariable("id")int id){
         boolean delete= orderItemService.delete(id);
