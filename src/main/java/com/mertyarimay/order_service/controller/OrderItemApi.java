@@ -48,7 +48,7 @@ public class OrderItemApi {
         if(updateOrderItem!=null){
             return ResponseEntity.ok("Sepetteki ürünün güncellemesi başarılı bir şekilde gerçekleşti ");
         }else{
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Sepetteki ürün güncelleme işlemi başarısız");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sepetteki ürün güncelleme işlemi başarısız");
         }
 
     }

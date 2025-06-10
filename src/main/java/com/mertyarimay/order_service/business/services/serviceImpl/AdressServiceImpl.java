@@ -56,9 +56,10 @@ public class AdressServiceImpl implements AdressService {
         AdressEntity adressEntity=adressRepository.findById(id).orElse(null);
         if(adressEntity!=null){
             adressRepository.deleteById(id);
-            return true;
-        }else {
-            return false;
+            if(!adressRepository.existsById(id)){
+                return true;
+            }
         }
+        return false;
     }
 }

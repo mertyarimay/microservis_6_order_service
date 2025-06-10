@@ -95,7 +95,7 @@ public class OrderItemServiceImpl implements OrderItemService {
 
             // Order içindeki listeden item'ı çıkar
             if (order != null && order.getOrderItemEntities() != null) {
-                order.getOrderItemEntities().removeIf(item -> item.getId() == id);
+                order.getOrderItemEntities().removeIf(item -> item.getId() == id);  //RemoveIf metodu  bir koşula göre silme yapar
 
                 // Hibernate orphanRemoval devreye girsin diye sadece order'ı save et
                 orderRepository.save(order);

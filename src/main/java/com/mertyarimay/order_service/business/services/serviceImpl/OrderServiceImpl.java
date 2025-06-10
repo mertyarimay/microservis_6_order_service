@@ -108,7 +108,6 @@ public class OrderServiceImpl implements OrderService {
             AdressEntity adressEntity=adressRepository.findById(updateOrderDto.getAdressId()).orElse(null);
             if(adressEntity!=null){
                 order.setAdressEntity(adressEntity);
-                order.recalculateTotalAmount();
                 order.preUpdate();
                 orderRepository.save(order);
                 ApprovalResponseDto approvalResponse=new ApprovalResponseDto();
@@ -137,7 +136,9 @@ public class OrderServiceImpl implements OrderService {
         OrderEntity order=orderRepository.findById(id).orElse(null);
         if(order!=null){
             orderRepository.deleteById(id);
-            return true;
+            if(!orderRepository.existsById(id)){
+                return true;
+            }
         }
         return false;
     }
